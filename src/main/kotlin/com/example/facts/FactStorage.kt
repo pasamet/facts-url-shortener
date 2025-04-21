@@ -20,8 +20,8 @@ class FactStorage(private val generator: FactKeyGenerator) {
 
     fun retrieve(key: String): StoredFact? = map[key]
 
-    open fun retrieveAll(): Iterable<StoredFact> = map.values
-    
+    open fun retrieveAll(): List<StoredFact> = map.values.toList()
+
 }
 
 data class StoredFact(

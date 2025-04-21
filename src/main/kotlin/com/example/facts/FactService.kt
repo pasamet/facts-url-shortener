@@ -25,6 +25,10 @@ class FactService(
             shortenedUrl = key
         )
     }
+
+    fun facts(): List<StoredFact> = storage.retrieveAll()
+
+    fun fact(key: String) = storage.retrieve(key)
 }
 
 data class ShortenedFact(

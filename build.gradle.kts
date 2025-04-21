@@ -21,6 +21,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.quarkiverse.mockk:quarkus-junit5-mockk:3.0.0")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.rest-assured:kotlin-extensions:5.5.1")
 }
 
 group = "com.example"
@@ -32,7 +35,10 @@ java {
 }
 
 tasks.withType<Test> {
-    systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+    systemProperty(
+        "java.util.logging.manager",
+        "org.jboss.logmanager.LogManager"
+    )
 }
 allOpen {
     annotation("jakarta.ws.rs.Path")
