@@ -1,59 +1,105 @@
 # facts-url-shortener
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+An URL shortener API
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 
 ```shell script
-./gradlew quarkusDev
+quarkus dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Type `r` to run unit tests
 
-## Packaging and running the application
+## API
 
-The application can be packaged using:
+### Shorten fact end point
 
-```shell script
-./gradlew build
+`curl -X POST http://localhost:8080/facts`
+
+Fetches a random fact from the Useless Facts API and provides a short link
+
+Response:
+
+```json
+{
+  "original_fact": "string",
+  "shortened_url": "string"
+}
 ```
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+### List facts end point
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+Lists previously cached facts
 
-If you want to build an _über-jar_, execute the following command:
+`curl http://localhost:8080/facts`
 
-```shell script
-./gradlew build -Dquarkus.package.jar.type=uber-jar
+Response:
+
+```json
+ [
+  {
+    "fact": "string",
+    "original_permalink": "string"
+  },
+  ...
+]
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+### List facts end point
 
-## Creating a native executable
+Lists previously cached facts
 
-You can create a native executable using:
+`curl http://localhost:8080/facts`
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true
+Response:
+
+```json
+ [
+  {
+    "fact": "string",
+    "original_permalink": "string"
+  },
+  ...
+]
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+### Single fact end point
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
+Return the fact associated with given `<shortened_url>`
+
+`curl http://localhost:8080/facts/<shortened_url>`
+
+Response:
+
+```json
+{
+  "fact": "string",
+  "original_permalink": "string"
+}
 ```
 
-You can then execute your native executable with: `./build/facts-url-shortener-1.0.0-SNAPSHOT-runner`
+### Redirect to fact end point
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
+Redirects to the original permalink of the given `<shortened_url>`
 
-## Related Guides
+`curl http://localhost:8080/facts/<shortened_url>/redirect`
 
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
+### Access statistics
+
+Lists access counts for each short link
+
+`curl http://localhost:8080/admin/statistics`
+
+Response:
+
+```json
+ [
+  {
+    "shortened_url": "string",
+    "access_count": "integer"
+  },
+  ...
+]
+```
