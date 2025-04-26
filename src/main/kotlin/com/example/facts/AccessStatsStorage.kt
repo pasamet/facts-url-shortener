@@ -13,19 +13,20 @@ class AccessStatsStorage {
 
     fun record(method: String, uri: UriInfo) {
         if (method != "GET") {
-            return;
+            return
         }
 
         val shortenedUrl = uri.pathParameters["shortenedUrl"]?.firstOrNull()
 
-        shortenedUrl?.run {
-            if (isNotEmpty()) {
-                val count = map.getOrPut(this) {
-                    AtomicLong()
-                }.incrementAndGet()
-                Log.info("$this: $count")
-            }
+        if (shortenedUrl.isNullOrEmpty()) {
+            return
         }
+
+        val count = map.getOrPut(shortenedUrl) {
+            AtomicLong()
+        }.incrementAndGet()
+
+        Log.debug("$this: $count")
     }
 
     fun accessCounts(): List<AccessCount> =

@@ -7,11 +7,17 @@ import java.util.concurrent.ConcurrentHashMap
 @ApplicationScoped
 class FactStorage(private val generator: FactKeyGenerator) {
     private val map = ConcurrentHashMap<String, StoredFact>()
-    private val permalinkToToKey = ConcurrentHashMap<String, String>()
+    private val permalinkToKey = ConcurrentHashMap<String, String>()
 
+    /**
+     * Stores given [value] and returns the storage key. If a value with same
+     * `originalPermalink` is already stored, returns key of the previous value,
+     * otherwise returns a new key.
+     */
     fun store(value: StoredFact): String {
         val permalink = value.originalPermalink
-        val key = permalinkToToKey.computeIfAbsent(permalink) {
+
+        val key = permalinkToKey.computeIfAbsent(permalink) {
             generator.nextKey()
         }
         map[key] = value
@@ -20,7 +26,7 @@ class FactStorage(private val generator: FactKeyGenerator) {
 
     fun retrieve(key: String): StoredFact? = map[key]
 
-    open fun retrieveAll(): List<StoredFact> = map.values.toList()
+    fun retrieveAll(): List<StoredFact> = map.values.toList()
 
 }
 

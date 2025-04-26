@@ -19,21 +19,28 @@ class FactServiceTest {
     @MockK
     lateinit var factClient: FactClient
 
-    val factService by lazy { FactService(factStorage, factClient, "en") }
+    private val factService by lazy {
+        FactService(
+            factStorage,
+            factClient,
+            "en"
+        )
+    }
 
     @Test
-    fun `When shortenNextRandomFact called Then stores the fact`() {
-        coEvery { factClient.random(any()) } returns Fact(
-            id = "id",
-            text = "text",
-            source = "source",
-            sourceUrl = "sourceUrl",
-            language = "language",
-            permalink = "permalink",
-        )
-        every { factStorage.store(any()) } returns "key"
-
+    fun `When shortenNextRandomFact called Then stores the fact`() =
         runBlocking {
+            coEvery { factClient.random(any()) } returns Fact(
+                id = "id",
+                text = "text",
+                source = "source",
+                sourceUrl = "sourceUrl",
+                language = "language",
+                permalink = "permalink",
+            )
+            every { factStorage.store(any()) } returns "key"
+
+
             val actual = factService.shortenNextRandomFact()
 
             assertEquals(
@@ -53,7 +60,6 @@ class FactServiceTest {
                 )
             }
         }
-    }
 
     @Test
     fun `When getFacts called Then returns the stored facts`() {

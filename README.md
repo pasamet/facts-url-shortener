@@ -12,6 +12,10 @@ quarkus dev
 
 Type `r` to run unit tests
 
+To see the API documentation
+open [Swagger UI](http://localhost:8080/q/swagger-ui/)
+in your browser.
+
 ## API
 
 ### Shorten fact end point
